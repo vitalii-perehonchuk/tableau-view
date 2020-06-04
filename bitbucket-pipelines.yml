@@ -23,7 +23,7 @@ pipelines:
       - step: *Check
       - step:
           artifacts:
-            - ves-2020.tar.gz
+            - tableau-view.tar.gz
           caches:
             - node
           name: Build
