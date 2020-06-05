@@ -7,11 +7,12 @@
 
 <script>
 import HelloWorld from '../components/HelloWorld.vue';
+import { Component, Vue } from 'vue-property-decorator';
 
-export default {
-  name: 'Home',
+@Component({
   components: {
     HelloWorld,
   },
-};
+})
+export default class Home extends Vue {}
 </script>

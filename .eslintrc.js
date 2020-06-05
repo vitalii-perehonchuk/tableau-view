@@ -1,5 +1,3 @@
-const path = require('path');
-
 module.exports = {
   env: {
     node: true,
@@ -28,6 +26,9 @@ module.exports = {
     },
   ],
   parserOptions: {
+    ecmaFeatures: {
+      legacyDecorators: true,
+    },
     parser: 'babel-eslint',
   },
   plugins: [
@@ -53,15 +54,5 @@ module.exports = {
       },
     ],
     'unicorn/prefer-spread': 'off',
-  },
-  settings: {
-    'import/resolver': {
-      webpack: path.join(
-        'node_modules',
-        '@vue',
-        'cli-service',
-        'webpack.config.js',
-      ),
-    },
   },
 };
