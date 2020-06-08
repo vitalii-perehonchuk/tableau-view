@@ -43,6 +43,10 @@
     "vue-template-compiler": "~2.6.11",
     "webpack": "~4.43.0"
   },
+  "engines": {
+    "yarn": "1.19.1",
+    "node": "12"
+  },
   "name": "tableau-view",
   "private": true,
   "scripts": {
