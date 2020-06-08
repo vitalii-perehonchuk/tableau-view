@@ -1,0 +1,25 @@
+{
+    "ignore": [
+        "build/**/*.test.js"
+    ],
+    "plugins": [
+        [
+            "@babel/transform-runtime"
+        ],
+        "@babel/plugin-proposal-class-properties"
+    ],
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "corejs": {
+                    "version": 3
+                },
+                "targets": {
+                    "node": "12"
+                },
+                "useBuiltIns": "usage"
+            }
+        ]
+    ],
+}
