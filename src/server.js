@@ -5,12 +5,13 @@ import includes from 'lodash/includes';
 
 const ALLOWED_ORIGINS = [
   'http://localhost:8080',
+  'http://localhost:8090',
   'https://tableau-view.netlify.app',
   'https://tableau-view.herokuapp.com',
 ];
 
 const app = express();
-// app.use(bodyParser.json());
+app.use('/', express.static('.'));
 app.use(
   cors({
     origin(origin, callback) {
@@ -39,5 +40,4 @@ app.use(
     xfwd: true,
   }),
 );
-app.use(express.static('dist'));
 app.listen(process.env.PORT || 8090);
