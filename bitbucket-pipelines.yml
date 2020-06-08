@@ -28,8 +28,8 @@ pipelines:
             - node
           name: Build
           script:
-            - yarn build
-            - tar -czvf tableau-view.tar.gz ./*
+            # - yarn build
+            - tar -czvf tableau-view.tar.gz .
       - step:
           deployment: production
           name: Deploy
