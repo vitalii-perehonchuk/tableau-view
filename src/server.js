@@ -1,4 +1,3 @@
-// import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
@@ -7,6 +6,7 @@ import includes from 'lodash/includes';
 const ALLOWED_ORIGINS = [
   'http://localhost:8080',
   'https://tableau-view.netlify.app',
+  'https://tableau-view.herokuapp.com',
 ];
 
 const app = express();
@@ -39,6 +39,5 @@ app.use(
     xfwd: true,
   }),
 );
-app.use(express.static('public'));
 app.use(express.static('dist'));
 app.listen(process.env.PORT || 8090);
