@@ -29,7 +29,7 @@ pipelines:
           name: Build
           script:
             # - yarn build
-            - tar -czvf --exclude="./node_modules" tableau-view.tar.gz . 
+            - tar --exclude="./node_modules" -czvf tableau-view.tar.gz . 
       - step:
           deployment: production
           name: Deploy
