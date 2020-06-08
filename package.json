@@ -44,8 +44,8 @@
     "webpack": "~4.43.0"
   },
   "engines": {
-    "yarn": "1.19.1",
-    "node": "12"
+    "yarn": ">=1.19.1",
+    "node": ">=12"
   },
   "name": "tableau-view",
   "private": true,
