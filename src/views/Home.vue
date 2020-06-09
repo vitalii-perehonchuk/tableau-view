@@ -3,11 +3,13 @@ import { Component, Vue } from 'vue-property-decorator';
 import ItemView from '../components/ItemView.vue';
 import DataSourceSetup from '../components/DataSourceSetup.vue';
 import ActiveItemView from '../components/ActiveItemView.vue';
+import Filters from '../components/Filters.vue';
 
 @Component({
   components: {
     'active-item-view': ActiveItemView,
     'data-source-setup': DataSourceSetup,
+    filters: Filters,
     item: ItemView,
   },
 })
@@ -16,13 +18,13 @@ export default class Home extends Vue {
     return this.$store.state.tableau.sortCriteria.name;
   }
   get ownerSortDirection() {
-    return this.$store.state.tableau.sortCriteria['owner.name'];
+    return this.$store.state.tableau.sortCriteria['owner.fullName'];
   }
   toggleNameSort() {
     this.toggleSort('name');
   }
   toggleOwnerSort() {
-    this.toggleSort('owner.name');
+    this.toggleSort('owner.fullName');
   }
   toggleSort(sortCriterion) {
     const currentDirection = this.$store.state.tableau.sortCriteria[
@@ -52,7 +54,7 @@ export default class Home extends Vue {
     return this.$store.state.tableau.sortCriteria.updatedAt;
   }
   get workbooks() {
-    return this.$store.state.tableau.workbooks;
+    return this.$store.getters['tableau/workbooks'];
   }
 }
 </script>
@@ -153,6 +155,7 @@ export default class Home extends Vue {
   <div class="home">
     <data-source-setup />
     <div class="items">
+      <filters />
       <div class="heading">
         <div class="name" @click="toggleNameSort" title="Sort">
           <div class="sort-triangle" :class="nameSortDirection"></div>

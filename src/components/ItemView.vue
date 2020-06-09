@@ -24,8 +24,21 @@ export default class ItemView extends Vue {
   }
   mounted() {
     if (!this.workbook) return;
-    this.$store.dispatch('tableau/fetchWorkbook', this.workbook.id);
-    this.$store.dispatch('tableau/fetchWorkbookPreviewImage', this.workbook.id);
+    if (
+      !this.$store.state.tableau.workbooksData ||
+      !this.$store.state.tableau.workbooksData[this.workbook.id]
+    ) {
+      this.$store.dispatch('tableau/fetchWorkbook', this.workbook.id);
+    }
+    if (
+      !this.$store.state.tableau.workbooksPreviewImages ||
+      !this.$store.state.tableau.workbooksPreviewImages[this.workbook.id]
+    ) {
+      this.$store.dispatch(
+        'tableau/fetchWorkbookPreviewImage',
+        this.workbook.id,
+      );
+    }
   }
   get name() {
     if (!this.workbook) return '';

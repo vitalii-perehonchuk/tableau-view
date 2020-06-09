@@ -111,6 +111,7 @@ export default class ActiveItemView extends Vue {
     :href="href"
     rel="noopener noreferrer"
     target="_blank"
+    title="Open in Tableau"
     v-if="activeItem"
   >
     <img class="preview-image" :alt="name" :src="previewImageSrc" />

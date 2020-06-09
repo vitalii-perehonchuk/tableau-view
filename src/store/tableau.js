@@ -1,15 +1,37 @@
 import axios from 'axios';
+import every from 'lodash/every';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
+import isNil from 'lodash/isNil';
 import keys from 'lodash/keys';
 import map from 'lodash/map';
 import orderBy from 'lodash/orderBy';
+import pickBy from 'lodash/pickBy';
 import split from 'lodash/split';
+import startsWith from 'lodash/startsWith';
+import uniq from 'lodash/uniq';
 import { Vue } from 'vue-property-decorator';
+import { format } from 'date-fns/esm';
+import { parseISO } from 'date-fns';
 
 const proxyingServer =
   process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8090';
+
+const FILTER_CHECKERS = {
+  createdAt(workbook, value) {
+    if (isNil(value)) {
+      return true;
+    }
+    return startsWith(workbook.createdAt, value);
+  },
+  'owner.fullName': function (workbook, value) {
+    if (isNil(value)) {
+      return true;
+    }
+    return get(workbook, 'owner.fullName') === value;
+  },
+};
 
 export default {
   actions: {
@@ -116,6 +138,33 @@ export default {
       }
       return find(state.workbooks, ['id', state.activeItemId]);
     },
+    createdOptions(state) {
+      return uniq(
+        map(state.workbooks, (workbook) =>
+          format(parseISO(workbook.createdAt), 'yyyy-MM-dd'),
+        ),
+      );
+    },
+    owners(state) {
+      return uniq(map(state.workbooks, 'owner.fullName'));
+    },
+    workbooks(state) {
+      const filteredWorkbooks = filter(state.workbooks, (workbook) =>
+        every(state.activeFilters, (value, criterion) =>
+          FILTER_CHECKERS[criterion](workbook, value),
+        ),
+      );
+      const activeSorts = pickBy(state.sortCriteria);
+      const activeSortCriteria = keys(activeSorts);
+      return orderBy(
+        filteredWorkbooks,
+        activeSortCriteria,
+        map(
+          activeSortCriteria,
+          (activeSortCriterion) => activeSorts[activeSortCriterion],
+        ),
+      );
+    },
   },
   mutations: {
     saveCredentials(state, { host, siteId, siteName, token, url }) {
@@ -131,27 +180,17 @@ export default {
     setError(state, error) {
       Vue.set(state, 'error', error);
     },
+    setFilter(state, { criterion, value }) {
+      Vue.set(state.activeFilters, criterion, value);
+    },
+    setFilterOpen(state, { criterion, value }) {
+      Vue.set(state.openFilters, criterion, value);
+    },
     setLoading(state, value) {
       Vue.set(state, 'isLoading', value);
     },
     setSortCriterion(state, { sortCriterion, direction }) {
       Vue.set(state.sortCriteria, sortCriterion, direction);
-      const activeSortCriteria = filter(
-        keys(state.sortCriteria),
-        (sortCriterionItem) => state.sortCriteria[sortCriterionItem],
-      );
-      Vue.set(
-        state,
-        'workbooks',
-        orderBy(
-          state.workbooks,
-          activeSortCriteria,
-          map(
-            activeSortCriteria,
-            (activeSortCriterion) => state.sortCriteria[activeSortCriterion],
-          ),
-        ),
-      );
     },
     setUserData(state, user) {
       Vue.set(state.usersData, user.id, user);
@@ -168,10 +207,12 @@ export default {
   },
   namespaced: true,
   state: () => ({
+    activeFilters: {},
     activeItemId: undefined,
     error: undefined,
     host: undefined,
     isLoading: false,
+    openFilters: {},
     siteId: undefined,
     siteName: undefined,
     sortCriteria: {},
