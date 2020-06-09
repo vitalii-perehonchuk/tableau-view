@@ -5,6 +5,9 @@ import package_ from '../package.json';
 
 childProcess.execSync('vue-cli-service build');
 childProcess.execSync(
+  'babel --config-file ./.server.babelrc src/index.js --out-file dist/index.js',
+);
+childProcess.execSync(
   'babel --config-file ./.server.babelrc src/server.js --out-file dist/server.js',
 );
 childProcess.execSync('cp Procfile dist/');

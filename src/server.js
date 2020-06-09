@@ -11,7 +11,10 @@ const ALLOWED_ORIGINS = [
 ];
 
 const app = express();
-app.use('/', express.static('.'));
+app.use(
+  '/',
+  express.static(process.env.NODE_ENV === 'production' ? '.' : 'dist'),
+);
 app.use(
   cors({
     origin(origin, callback) {
@@ -40,4 +43,4 @@ app.use(
     xfwd: true,
   }),
 );
-app.listen(process.env.PORT || 8090);
+export default app;
