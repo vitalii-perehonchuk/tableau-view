@@ -7,7 +7,7 @@ export default class User extends Vue {
   imageSrc = defaultUserImage;
   get name() {
     if (!this.user) return '';
-    return this.user.name;
+    return this.user.fullName || this.user.name;
   }
   @Prop(Object)
   user = undefined;
@@ -18,6 +18,7 @@ export default class User extends Vue {
   align-items: center;
   display: flex;
   flex-direction: row;
+  height: 100%;
   img {
     height: 16px;
     margin-right: 7px;

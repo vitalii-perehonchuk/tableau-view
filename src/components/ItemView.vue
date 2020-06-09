@@ -10,7 +10,18 @@ import User from './User.vue';
     user: User,
   },
 })
-export default class Item extends Vue {
+export default class ItemView extends Vue {
+  activate() {
+    if (!this.workbook) return;
+    this.$store.commit('tableau/setActiveItem', this.workbook.id);
+  }
+  get classes() {
+    if (!this.workbook) return '';
+    if (this.$store.state.tableau.activeItemId === this.workbook.id) {
+      return 'active';
+    }
+    return '';
+  }
   mounted() {
     if (!this.workbook) return;
     this.$store.dispatch('tableau/fetchWorkbook', this.workbook.id);
@@ -64,7 +75,17 @@ export default class Item extends Vue {
   height: 78px;
   // justify-content: stretch;
   text-align: left;
+  transition: 1s;
   width: 100%;
+  &.active {
+    margin-left: 24px;
+    &:not(:last-child) {
+      margin-bottom: 12px;
+    }
+    &:not(:first-child) {
+      margin-top: 12px;
+    }
+  }
   .main-cell {
     display: flex;
     flex-basis: 400px;
@@ -73,12 +94,11 @@ export default class Item extends Vue {
     .preview-image {
       height: 38px;
       margin: 20px;
-      // width: 30px;
     }
     .main-cell-column {
-      // display: table-cell;
       display: flex;
       flex-direction: column;
+      justify-content: space-around;
       .super-title {
         color: #5f68ad;
         font-size: 14px;
@@ -110,7 +130,7 @@ export default class Item extends Vue {
 }
 </style>
 <template>
-  <div class="item">
+  <div class="item" :class="classes" @click="activate">
     <div class="main-cell">
       <img class="preview-image" alt="Preview image" :src="previewImageSrc" />
       <div class="main-cell-column">

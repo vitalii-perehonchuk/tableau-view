@@ -1,4 +1,6 @@
 import axios from 'axios';
+import find from 'lodash/find';
+import get from 'lodash/get';
 import split from 'lodash/split';
 import { Vue } from 'vue-property-decorator';
 
@@ -11,7 +13,7 @@ export default {
       commit('setLoading', true);
       try {
         const response = await axios.get(
-          `${proxyingServer}/api/3.8/sites/${state.siteId}/workbooks/${workbookId}`,
+          `${proxyingServer}/api/3.8/sites/${state.siteId}/workbooks/${workbookId}?fields=_all_`,
           { headers: { 'X-Tableau-Auth': state.token } },
         );
         const responseData = response.data;
@@ -52,11 +54,13 @@ export default {
       commit('setLoading', true);
       try {
         const response = await axios.get(
-          `${proxyingServer}/api/3.8/sites/${state.siteId}/workbooks`,
+          `${proxyingServer}/api/3.8/sites/${state.siteId}/workbooks?fields=_all_`,
           { headers: { 'X-Tableau-Auth': state.token } },
         );
         const responseData = response.data;
-        commit('setWorkbooks', responseData.workbooks.workbook);
+        const workbooks = responseData.workbooks.workbook;
+        commit('setWorkbooks', workbooks);
+        commit('setActiveItem', get(workbooks, '[0].id'));
       } catch (error) {
         console.error(error);
         commit('setError', error);
@@ -100,12 +104,23 @@ export default {
       }
     },
   },
+  getters: {
+    activeItem(state) {
+      if (!state.activeItemId) {
+        return undefined;
+      }
+      return find(state.workbooks, ['id', state.activeItemId]);
+    },
+  },
   mutations: {
     saveCredentials(state, { host, siteId, siteName, token }) {
       state.host = host;
       state.siteId = siteId;
       state.siteName = siteName;
       state.token = token;
+    },
+    setActiveItem(state, itemId) {
+      Vue.set(state, 'activeItemId', itemId);
     },
     setError(state, error) {
       Vue.set(state, 'error', error);
@@ -128,6 +143,7 @@ export default {
   },
   namespaced: true,
   state: () => ({
+    activeItemId: undefined,
     error: undefined,
     host: undefined,
     isLoading: false,

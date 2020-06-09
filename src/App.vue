@@ -19,6 +19,12 @@ export default class App extends Vue {
 }
 </script>
 <style lang="scss">
+* {
+  font-family: Nunito, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  line-height: 15px;
+}
 @import 'bootstrap/scss/bootstrap.scss';
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

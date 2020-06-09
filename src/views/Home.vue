@@ -1,12 +1,14 @@
 <script>
 import { Component, Vue } from 'vue-property-decorator';
-import Item from '../components/Item.vue';
+import ItemView from '../components/ItemView.vue';
 import DataSourceSetup from '../components/DataSourceSetup.vue';
+import ActiveItemView from '../components/ActiveItemView.vue';
 
 @Component({
   components: {
+    'active-item-view': ActiveItemView,
     'data-source-setup': DataSourceSetup,
-    item: Item,
+    item: ItemView,
   },
 })
 export default class Home extends Vue {
@@ -17,6 +19,8 @@ export default class Home extends Vue {
 </script>
 <style lang="scss" scoped>
 .home {
+  display: flex;
+  flex-direction: row;
   text-align: right;
   width: 100%;
   .items {
@@ -62,7 +66,8 @@ export default class Home extends Vue {
   }
   .details {
     background-color: white;
-    width: 30vw;
+    padding-top: 78px;
+    width: 40vw;
   }
 }
 </style>
@@ -81,6 +86,6 @@ export default class Home extends Vue {
         v-for="workbook in workbooks"
       />
     </div>
-    <div class="details"></div>
+    <div class="details"><active-item-view /></div>
   </div>
 </template>
