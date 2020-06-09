@@ -2,7 +2,6 @@
 import isEmpty from 'lodash/isEmpty';
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import FilterOption from './FilterOption.vue';
-// import User from './User.vue';
 
 @Component({
   components: {

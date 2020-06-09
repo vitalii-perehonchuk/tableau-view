@@ -1,12 +1,7 @@
 <script>
 import { Component, Vue, Prop } from 'vue-property-decorator';
-// import User from './User.vue';
 
-@Component({
-  components: {
-    // user: User,
-  },
-})
+@Component
 export default class FilterOption extends Vue {
   activate() {
     this.$store.commit('tableau/setFilter', {

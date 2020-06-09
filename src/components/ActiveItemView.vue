@@ -1,7 +1,10 @@
 <script>
+import format from 'date-fns/format';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import parseISO from 'date-fns/parseISO';
+import pickBy from 'lodash/pickBy';
 import { Component, Vue } from 'vue-property-decorator';
 import defaultWorkbookPreview from '../assets/workbook.png';
-import { formatDistanceToNow, parseISO, format } from 'date-fns';
 import ViewView from './ViewView.vue';
 
 @Component({
@@ -17,9 +20,27 @@ export default class ActiveItemView extends Vue {
     if (!this.activeItem) return '';
     return format(parseISO(this.activeItem.createdAt), 'yyyy-MM-dd');
   }
+  handleResize(event) {
+    console.info(event, pickBy(this.$refs.activeItemView));
+    this.width = window.innerWidth - event.pageX;
+    console.info(this.width);
+  }
+  handleResizeEnd(event) {
+    event.preventDefault();
+    document.removeEventListener('mousemove', this.handleResize);
+    localStorage.setItem('active-item-view-width', this.width);
+  }
+  handleResizeStart(event) {
+    event.preventDefault();
+    document.addEventListener('mousemove', this.handleResize);
+  }
   get href() {
     if (!this.activeItem) return undefined;
     return this.activeItem.webpageUrl;
+  }
+  mounted() {
+    this.width =
+      Number.parseInt(localStorage.getItem('active-item-view-width')) || 300;
   }
   get name() {
     if (!this.activeItem) return '';
@@ -45,6 +66,11 @@ export default class ActiveItemView extends Vue {
     if (!this.activeItem || !this.activeItem.project) return '';
     return this.activeItem.project.name;
   }
+  get style() {
+    return {
+      width: `${this.width}px`,
+    };
+  }
   get updatedAgo() {
     if (!this.activeItem) return '';
     return formatDistanceToNow(parseISO(this.activeItem.updatedAt));
@@ -57,6 +83,7 @@ export default class ActiveItemView extends Vue {
     if (!workbookData) return [];
     return workbookData.views.view || [];
   }
+  width = 300;
   get workbookContentUrl() {
     if (!this.activeItem) return [];
     return this.activeItem.contentUrl;
@@ -65,10 +92,20 @@ export default class ActiveItemView extends Vue {
 </script>
 <style lang="scss" scoped>
 .active-item-view {
+  color: #5f68ad;
   display: flex;
   flex-direction: column;
+  flex-grow: 0;
+  padding-top: 78px;
+  position: relative;
   text-decoration: none;
-  color: #5f68ad;
+  .drag-control {
+    cursor: ew-resize;
+    height: 100vh;
+    left: -10px;
+    position: absolute;
+    width: 20px;
+  }
   .preview-image {
     width: 100%;
   }
@@ -84,6 +121,7 @@ export default class ActiveItemView extends Vue {
     .property {
       display: flex;
       flex-direction: row;
+      flex-wrap: wrap;
       justify-content: space-between;
       padding: 12px;
       width: 50%;
@@ -91,9 +129,12 @@ export default class ActiveItemView extends Vue {
         color: #2c3e50;
         text-transform: uppercase;
       }
-      .property-value {
-      }
     }
+  }
+  .project-description {
+    max-width: 100%;
+    padding-left: 16px;
+    text-align: left;
   }
   .views {
     width: 100%;
@@ -109,11 +150,20 @@ export default class ActiveItemView extends Vue {
   <a
     class="active-item-view"
     :href="href"
+    ref="activeItemView"
     rel="noopener noreferrer"
+    :style="style"
     target="_blank"
     title="Open in Tableau"
     v-if="activeItem"
   >
+    <div
+      class="drag-control"
+      @click.prevent
+      @mousedown="handleResizeStart"
+      @mouseup="handleResizeEnd"
+      title="Resize"
+    ></div>
     <img class="preview-image" :alt="name" :src="previewImageSrc" />
     <div class="properties">
       <div class="property">
@@ -132,16 +182,16 @@ export default class ActiveItemView extends Vue {
         <div class="property-name">Project</div>
         <div class="property-value">{{ projectName }}</div>
       </div>
-      <div class="project-description">{{ projectDescription }}</div>
-      <ul class="views">
-        <div class="views-title">Views</div>
-        <view-view
-          :key="view.id"
-          :view="view"
-          :workbook-content-url="workbookContentUrl"
-          v-for="view in views"
-        />
-      </ul>
     </div>
+    <div class="project-description">{{ projectDescription }}</div>
+    <ul class="views">
+      <div class="views-title">Views</div>
+      <view-view
+        :key="view.id"
+        :view="view"
+        :workbook-content-url="workbookContentUrl"
+        v-for="view in views"
+      />
+    </ul>
   </a>
 </template>

@@ -1,4 +1,6 @@
 import axios from 'axios';
+import format from 'date-fns/format';
+import parseISO from 'date-fns/parseISO';
 import every from 'lodash/every';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -12,8 +14,6 @@ import split from 'lodash/split';
 import startsWith from 'lodash/startsWith';
 import uniq from 'lodash/uniq';
 import { Vue } from 'vue-property-decorator';
-import { format } from 'date-fns/esm';
-import { parseISO } from 'date-fns';
 
 const proxyingServer =
   process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8090';

@@ -79,7 +79,7 @@ export default class ItemView extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-.item {
+.item-view {
   background-color: white;
   border-bottom: 1px solid #e5e6ff;
   cursor: pointer;
@@ -140,7 +140,7 @@ export default class ItemView extends Vue {
 }
 </style>
 <template>
-  <div class="item" :class="classes" @click="activate">
+  <div class="item-view" :class="classes" @click="activate">
     <div class="main-cell">
       <img class="preview-image" alt="Preview image" :src="previewImageSrc" />
       <div class="main-cell-column">

@@ -8,11 +8,8 @@ export default class ErrorNotification extends Vue {
 </script>
 <style lang="scss" scoped>
 .error {
-  background-color: #0b0b2d;
   border-radius: 6px;
   bottom: 20px;
-  color: white;
-  font-family: Karla, sans-serif;
   padding: 16px 23px;
   position: fixed;
   right: 20px;

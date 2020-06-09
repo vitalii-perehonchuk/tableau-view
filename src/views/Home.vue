@@ -62,6 +62,8 @@ export default class Home extends Vue {
 .home {
   display: flex;
   flex-direction: row;
+  max-width: 100vw;
+  overflow: hidden;
   text-align: right;
   width: 100%;
   .items {
@@ -69,13 +71,11 @@ export default class Home extends Vue {
     border-top-color: #e5e6ff;
     border-top-style: solid;
     border-top-width: 1px;
-    padding-right: 26px;
-    padding-top: 26px;
     // display: table;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    padding: 60px;
+    flex-grow: 1;
+    padding: 26px 60px;
     .heading {
       color: #828282;
       cursor: pointer;
@@ -144,11 +144,6 @@ export default class Home extends Vue {
       }
     }
   }
-  .details {
-    background-color: white;
-    padding-top: 78px;
-    width: 40vw;
-  }
 }
 </style>
 <template>
@@ -181,6 +176,6 @@ export default class Home extends Vue {
         <img src="../assets/arrow-right.svg" class="arrow-right" alt="Back" />
       </div>
     </div>
-    <div class="details"><active-item-view /></div>
+    <active-item-view />
   </div>
 </template>
