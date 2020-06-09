@@ -69,11 +69,10 @@ export default class ItemView extends Vue {
 .item {
   background-color: white;
   border-bottom: 1px solid #e5e6ff;
-  // display: table-row;
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   height: 78px;
-  // justify-content: stretch;
   text-align: left;
   transition: 1s;
   width: 100%;
@@ -101,7 +100,7 @@ export default class ItemView extends Vue {
       justify-content: space-around;
       .super-title {
         color: #5f68ad;
-        font-size: 14px;
+        font-size: 10px;
         font-weight: bold;
       }
       .title {
@@ -119,8 +118,6 @@ export default class ItemView extends Vue {
   }
   .owner,
   .updated-at {
-    // display: table-cell;
-    // display: flex;
     flex-basis: 180px;
     flex-grow: 0;
     line-height: 38px;

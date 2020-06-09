@@ -1,6 +1,10 @@
 import axios from 'axios';
+import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
+import keys from 'lodash/keys';
+import map from 'lodash/map';
+import orderBy from 'lodash/orderBy';
 import split from 'lodash/split';
 import { Vue } from 'vue-property-decorator';
 
@@ -95,6 +99,7 @@ export default {
           siteId: responseData.credentials.site.id,
           siteName: siteName,
           token: responseData.credentials.token,
+          url: credentials.url,
         });
       } catch (error) {
         console.error(error);
@@ -113,11 +118,12 @@ export default {
     },
   },
   mutations: {
-    saveCredentials(state, { host, siteId, siteName, token }) {
+    saveCredentials(state, { host, siteId, siteName, token, url }) {
       state.host = host;
       state.siteId = siteId;
       state.siteName = siteName;
       state.token = token;
+      state.url = url;
     },
     setActiveItem(state, itemId) {
       Vue.set(state, 'activeItemId', itemId);
@@ -127,6 +133,25 @@ export default {
     },
     setLoading(state, value) {
       Vue.set(state, 'isLoading', value);
+    },
+    setSortCriterion(state, { sortCriterion, direction }) {
+      Vue.set(state.sortCriteria, sortCriterion, direction);
+      const activeSortCriteria = filter(
+        keys(state.sortCriteria),
+        (sortCriterionItem) => state.sortCriteria[sortCriterionItem],
+      );
+      Vue.set(
+        state,
+        'workbooks',
+        orderBy(
+          state.workbooks,
+          activeSortCriteria,
+          map(
+            activeSortCriteria,
+            (activeSortCriterion) => state.sortCriteria[activeSortCriterion],
+          ),
+        ),
+      );
     },
     setUserData(state, user) {
       Vue.set(state.usersData, user.id, user);
@@ -149,7 +174,9 @@ export default {
     isLoading: false,
     siteId: undefined,
     siteName: undefined,
+    sortCriteria: {},
     token: undefined,
+    url: undefined,
     usersData: {},
     workbooks: [],
     workbooksData: {},
