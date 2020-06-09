@@ -31,21 +31,32 @@ export default class DataSourceSetup extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-.modal-contents {
-  background-color: white;
-  margin: 0 auto;
-  min-width: 460px;
-  padding: 1vw 1vh;
-  position: relative;
-  .close {
-    position: absolute;
-    right: 1vw;
-    top: 1vh;
+.data-source-setup {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  .modal-contents {
+    background-color: white;
+    margin: 0 auto;
+    min-width: 460px;
+    padding: 1vw 1vh;
+    position: relative;
+    text-align: left;
+    .close {
+      position: absolute;
+      right: 1vw;
+      top: 1vh;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
   }
 }
 </style>
 <template>
-  <div>
+  <div class="data-source-setup">
     <button class="btn btn-light" @click="openModal">
       <img
         alt="Data source"
@@ -103,7 +114,9 @@ export default class DataSourceSetup extends Vue {
               v-model="password"
             />
           </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary submit-button">
+            Submit
+          </button>
         </form>
       </div>
     </modal>

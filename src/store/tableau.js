@@ -7,6 +7,47 @@ const proxyingServer =
 
 export default {
   actions: {
+    async fetchWorkbook({ commit, state }, workbookId) {
+      commit('setLoading', true);
+      try {
+        const response = await axios.get(
+          `${proxyingServer}/api/3.8/sites/${state.siteId}/workbooks/${workbookId}`,
+          { headers: { 'X-Tableau-Auth': state.token } },
+        );
+        const responseData = response.data;
+        commit('setWorkbookData', responseData.workbook);
+      } catch (error) {
+        console.error(error);
+        commit('setError', error);
+      } finally {
+        commit('setLoading', false);
+      }
+    },
+
+    async fetchWorkbookPreviewImage({ commit, state }, workbookId) {
+      commit('setLoading', true);
+      try {
+        const response = await axios.get(
+          `${proxyingServer}/api/3.8/sites/${state.siteId}/workbooks/${workbookId}/previewImage`,
+          {
+            headers: { 'X-Tableau-Auth': state.token },
+            responseType: 'arraybuffer',
+          },
+        );
+        const imageBase64 = Buffer.from(response.data, 'binary').toString(
+          'base64',
+        );
+        commit('setWorkbookPreviewImage', {
+          workbookId: workbookId,
+          image: imageBase64,
+        });
+      } catch (error) {
+        console.error(error);
+        commit('setError', error);
+      } finally {
+        commit('setLoading', false);
+      }
+    },
     async fetchWorkbooks({ commit, state }) {
       commit('setLoading', true);
       try {
@@ -15,9 +56,9 @@ export default {
           { headers: { 'X-Tableau-Auth': state.token } },
         );
         const responseData = response.data;
-        console.info(responseData);
         commit('setWorkbooks', responseData.workbooks.workbook);
       } catch (error) {
+        console.error(error);
         commit('setError', error);
       } finally {
         commit('setLoading', false);
@@ -52,6 +93,7 @@ export default {
           token: responseData.credentials.token,
         });
       } catch (error) {
+        console.error(error);
         commit('setError', error);
       } finally {
         commit('setLoading', false);
@@ -71,6 +113,15 @@ export default {
     setLoading(state, value) {
       Vue.set(state, 'isLoading', value);
     },
+    setUserData(state, user) {
+      Vue.set(state.usersData, user.id, user);
+    },
+    setWorkbookData(state, workbook) {
+      Vue.set(state.workbooksData, workbook.id, workbook);
+    },
+    setWorkbookPreviewImage(state, { image, workbookId }) {
+      Vue.set(state.workbooksPreviewImages, workbookId, image);
+    },
     setWorkbooks(state, workbooks) {
       Vue.set(state, 'workbooks', workbooks);
     },
@@ -83,6 +134,9 @@ export default {
     siteId: undefined,
     siteName: undefined,
     token: undefined,
+    usersData: {},
     workbooks: [],
+    workbooksData: {},
+    workbooksPreviewImages: {},
   }),
 };

@@ -54,5 +54,6 @@ module.exports = {
       },
     ],
     'unicorn/prefer-spread': 'off',
+    'unicorn/no-useless-undefined': 'off',
   },
 };

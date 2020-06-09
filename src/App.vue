@@ -1,12 +1,10 @@
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 import SpinnerOverlay from './components/SpinnerOverlay.vue';
-import DataSourceSetup from './components/DataSourceSetup.vue';
 import ErrorNotification from './components/ErrorNotification.vue';
 
 @Component({
   components: {
-    'data-source-setup': DataSourceSetup,
     'error-notification': ErrorNotification,
     'spinner-overlay': SpinnerOverlay,
   },
@@ -18,9 +16,6 @@ export default class App extends Vue {
   get isLoading() {
     return this.$store.getters.isLoading;
   }
-  // get isLoading() {
-  //   return false;
-  // }
 }
 </script>
 <style lang="scss">
@@ -58,11 +53,10 @@ export default class App extends Vue {
 
 <template>
   <div id="app">
-    <div id="nav">
-      <!-- <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> -->
-      <data-source-setup />
-    </div>
+    <!-- <div id="nav">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>
+    </div> -->
     <router-view />
     <spinner-overlay v-if="isLoading" />
     <error-notification v-if="error" :error="error" />
