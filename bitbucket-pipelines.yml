@@ -14,7 +14,7 @@ definitions:
         script:
           - "yarn lint"
           # - "yarn audit"
-          # - "yarn test:unit"
+          - "yarn test"
 image: "node:latest"
 pipelines:
   branches:
