@@ -22,6 +22,5 @@ export default new Store({
       Vue.set(state, 'isLoading', value);
     },
   },
-  // actions: {},
   strict: process.env.NODE_ENV !== 'production',
 });

@@ -14,6 +14,12 @@ import Filters from '../components/Filters.vue';
   },
 })
 export default class Home extends Vue {
+  demaximize() {
+    this.$store.commit('tableau/setInFocusedMode', false);
+  }
+  get isInFocusedMode() {
+    return this.$store.state.tableau.isInFocusedMode;
+  }
   get nameSortDirection() {
     return this.$store.state.tableau.sortCriteria.name;
   }
@@ -71,15 +77,24 @@ export default class Home extends Vue {
     border-top-color: #e5e6ff;
     border-top-style: solid;
     border-top-width: 1px;
-    // display: table;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    max-width: 75vw;
     padding: 26px 60px;
+    position: relative;
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.25);
+      bottom: 0px;
+      left: 0px;
+      position: fixed;
+      right: 0px;
+      top: 0px;
+      z-index: 1;
+    }
     .heading {
       color: #828282;
       cursor: pointer;
-      // display: table-row;
       display: flex;
       justify-content: stretch;
       text-align: center;
@@ -148,8 +163,8 @@ export default class Home extends Vue {
 </style>
 <template>
   <div class="home">
-    <data-source-setup />
     <div class="items">
+      <div class="overlay" @click="demaximize" v-if="isInFocusedMode"></div>
       <filters />
       <div class="heading">
         <div class="name" @click="toggleNameSort" title="Sort">
@@ -165,6 +180,7 @@ export default class Home extends Vue {
           Last updated
         </div>
       </div>
+      <data-source-setup />
       <item
         :key="workbook.id"
         :workbook="workbook"

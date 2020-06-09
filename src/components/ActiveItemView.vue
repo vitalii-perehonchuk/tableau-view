@@ -2,7 +2,6 @@
 import format from 'date-fns/format';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import parseISO from 'date-fns/parseISO';
-import pickBy from 'lodash/pickBy';
 import { Component, Vue } from 'vue-property-decorator';
 import defaultWorkbookPreview from '../assets/workbook.png';
 import ViewView from './ViewView.vue';
@@ -16,14 +15,15 @@ export default class ActiveItemView extends Vue {
   get activeItem() {
     return this.$store.getters['tableau/activeItem'];
   }
+  get classes() {
+    return this.isInFocusedMode ? 'focused' : '';
+  }
   get createdAt() {
     if (!this.activeItem) return '';
     return format(parseISO(this.activeItem.createdAt), 'yyyy-MM-dd');
   }
   handleResize(event) {
-    console.info(event, pickBy(this.$refs.activeItemView));
     this.width = window.innerWidth - event.pageX;
-    console.info(this.width);
   }
   handleResizeEnd(event) {
     event.preventDefault();
@@ -38,9 +38,14 @@ export default class ActiveItemView extends Vue {
     if (!this.activeItem) return undefined;
     return this.activeItem.webpageUrl;
   }
+  isInEditMode = false;
+  get isInFocusedMode() {
+    return this.$store.state.tableau.isInFocusedMode;
+  }
   mounted() {
-    this.width =
-      Number.parseInt(localStorage.getItem('active-item-view-width')) || 300;
+    this.width = Number.parseInt(
+      localStorage.getItem('active-item-view-width'),
+    );
   }
   get name() {
     if (!this.activeItem) return '';
@@ -67,9 +72,16 @@ export default class ActiveItemView extends Vue {
     return this.activeItem.project.name;
   }
   get style() {
+    if (!this.isInFocusedMode) {
+      return undefined;
+    }
     return {
       width: `${this.width}px`,
     };
+  }
+  toggleEdit(event) {
+    event.preventDefault();
+    this.isInEditMode = !this.isInEditMode;
   }
   get updatedAgo() {
     if (!this.activeItem) return '';
@@ -92,19 +104,43 @@ export default class ActiveItemView extends Vue {
 </script>
 <style lang="scss" scoped>
 .active-item-view {
+  background-color: white;
   color: #5f68ad;
   display: flex;
   flex-direction: column;
   flex-grow: 0;
-  padding-top: 78px;
+  height: 100vh;
   position: relative;
   text-decoration: none;
+  width: 25vw;
+  &.focused {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 75vw;
+    z-index: 2;
+  }
   .drag-control {
     cursor: ew-resize;
     height: 100vh;
     left: -10px;
     position: absolute;
     width: 20px;
+  }
+  .edit-button {
+    align-items: center;
+    background-color: #ffede6;
+    border-style: none;
+    border-radius: 4px;
+    color: #fe7043;
+    display: flex;
+    font-weight: bold;
+    font-size: 10px;
+    height: 24px;
+    justify-content: space-around;
+    line-height: 20px;
+    text-transform: uppercase;
+    width: 100px;
   }
   .preview-image {
     width: 100%;
@@ -149,6 +185,7 @@ export default class ActiveItemView extends Vue {
 <template>
   <a
     class="active-item-view"
+    :class="classes"
     :href="href"
     ref="activeItemView"
     rel="noopener noreferrer"
@@ -163,6 +200,7 @@ export default class ActiveItemView extends Vue {
       @mousedown="handleResizeStart"
       @mouseup="handleResizeEnd"
       title="Resize"
+      v-if="isInFocusedMode"
     ></div>
     <img class="preview-image" :alt="name" :src="previewImageSrc" />
     <div class="properties">
@@ -183,7 +221,16 @@ export default class ActiveItemView extends Vue {
         <div class="property-value">{{ projectName }}</div>
       </div>
     </div>
-    <div class="project-description">{{ projectDescription }}</div>
+    <div
+      class="project-description"
+      :contenteditable="isInEditMode"
+      @click.stop.prevent
+    >
+      {{ projectDescription }}
+    </div>
+    <button class="edit-button" @click.stop="toggleEdit">
+      <img src="../assets/tool.svg" /><span>Edit source</span>
+    </button>
     <ul class="views">
       <div class="views-title">Views</div>
       <view-view

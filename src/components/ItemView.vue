@@ -22,6 +22,9 @@ export default class ItemView extends Vue {
     }
     return '';
   }
+  maximize() {
+    this.$store.commit('tableau/setInFocusedMode', true);
+  }
   mounted() {
     if (!this.workbook) return;
     if (
@@ -140,7 +143,12 @@ export default class ItemView extends Vue {
 }
 </style>
 <template>
-  <div class="item-view" :class="classes" @click="activate">
+  <div
+    class="item-view"
+    :class="classes"
+    @click="maximize"
+    @mouseenter="activate"
+  >
     <div class="main-cell">
       <img class="preview-image" alt="Preview image" :src="previewImageSrc" />
       <div class="main-cell-column">

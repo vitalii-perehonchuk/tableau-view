@@ -186,6 +186,9 @@ export default {
     setFilterOpen(state, { criterion, value }) {
       Vue.set(state.openFilters, criterion, value);
     },
+    setInFocusedMode(state, value) {
+      Vue.set(state, 'isInFocusedMode', value);
+    },
     setLoading(state, value) {
       Vue.set(state, 'isLoading', value);
     },
@@ -211,6 +214,7 @@ export default {
     activeItemId: undefined,
     error: undefined,
     host: undefined,
+    isInFocusedMode: false,
     isLoading: false,
     openFilters: {},
     siteId: undefined,

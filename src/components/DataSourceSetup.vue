@@ -32,12 +32,12 @@ export default class DataSourceSetup extends Vue {
 </script>
 <style lang="scss" scoped>
 .data-source-setup {
-  position: absolute;
-  right: 15px;
-  top: 15px;
+  display: flex;
   .trigger {
-    color: #828282;
-    text-transform: uppercase;
+    background-color: #f5f6ff;
+    border-radius: 4px;
+    color: #92b0ff;
+    padding: 8px 17px;
   }
   .modal-contents {
     background-color: white;
@@ -62,7 +62,7 @@ export default class DataSourceSetup extends Vue {
 <template>
   <div class="data-source-setup">
     <button class="btn btn-light trigger" @click="openModal">
-      Data source
+      + New Template
     </button>
     <modal v-if="isModalOpen">
       <div class="modal-contents">
