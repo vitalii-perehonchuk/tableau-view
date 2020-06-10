@@ -2,12 +2,14 @@
 
 ## Project setup
 ```
-yarn install
+yarn
 ```
 
 ### Compiles and hot-reloads for development
+Run paralelly:
 ```
 yarn serve
+yarn proxy-dev-server
 ```
 
 ### Compiles and minifies for production
@@ -15,9 +17,9 @@ yarn serve
 yarn build
 ```
 
-### Run your unit tests
+### Run your tests
 ```
-yarn test:unit
+yarn test
 ```
 
 ### Lints and fixes files
