@@ -58,7 +58,7 @@
     "lint": "vue-cli-service lint",
     "proxy-dev-server": "nodemon --exec 'babel-node --config-file ./.server.babelrc' ./src/index.js",
     "serve": "vue-cli-service serve",
-    "start": "node index.js",
+    "start": "node dist/index.js",
     "test": "vue-cli-service test:unit"
   },
   "version": "0.1.0"

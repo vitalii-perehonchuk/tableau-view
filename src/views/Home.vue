@@ -3,7 +3,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import ItemView from '../components/ItemView.vue';
 import DataSourceSetup from '../components/DataSourceSetup.vue';
 import ActiveItemView from '../components/ActiveItemView.vue';
-import Filters from '../components/Filters.vue';
+import Filters from '../components/Filters/Filters.vue';
 
 @Component({
   components: {
